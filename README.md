@@ -1,1 +1,68 @@
 # financial_data_analysis
+import pandas as pd
+import yfinance as yf
+import matplotlib.pyplot as plt
+
+# Download historical stock prices of NVIDIA Corporation (NVDA) and Apple Inc. (AAPL)
+nvda = yf.download('NVDA', start='2012-01-01', end='2024-02-26')
+aapl = yf.download('AAPL', start='2012-01-01', end='2024-02-26')
+
+# Print the first few rows of the data
+print(nvda.head())
+print(aapl.head())
+
+# Calculate daily returns
+nvda['Return'] = nvda['Close'].pct_change()
+aapl['Return'] = aapl['Close'].pct_change()
+
+# Calculate moving averages
+nvda['MA_5'] = nvda['Close'].rolling(window=5).mean()
+nvda['MA_50'] = nvda['Close'].rolling(window=50).mean()
+nvda['MA_200'] = nvda['Close'].rolling(window=200).mean()
+nvda['MA_240'] = nvda['Close'].rolling(window=240).mean()
+
+aapl['MA_5'] = aapl['Close'].rolling(window=5).mean()
+aapl['MA_50'] = aapl['Close'].rolling(window=50).mean()
+aapl['MA_200'] = aapl['Close'].rolling(window=200).mean()
+aapl['MA_240'] = aapl['Close'].rolling(window=240).mean()
+
+# Plot the closing prices and moving averages of NVDA and AAPL
+plt.figure(figsize=(12,6))
+plt.plot(nvda['Close'], label='NVDA Close')
+plt.plot(nvda['MA_5'], label='NVDA MA_5')
+plt.plot(nvda['MA_50'], label='NVDA MA_50')
+plt.plot(nvda['MA_200'], label='NVDA MA_200')
+plt.plot(nvda['MA_240'], label='NVDA MA_240')
+plt.plot(aapl['Close'], label='AAPL Close')
+plt.plot(aapl['MA_5'], label='AAPL MA_5')
+plt.plot(aapl['MA_50'], label='AAPL MA_50')
+plt.plot(aapl['MA_200'], label='AAPL MA_200')
+plt.plot(aapl['MA_240'], label='AAPL MA_240')
+plt.title('NVDA and AAPL Closing Prices and Moving Averages')
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.legend()
+plt.show()
+
+# Calculate and plot daily returns
+plt.figure(figsize=(12,6))
+plt.plot(nvda['Return'], label='NVDA')
+plt.plot(aapl['Return'], label='AAPL')
+plt.title('NVDA and AAPL Daily Returns')
+plt.xlabel('Date')
+plt.ylabel('Return')
+plt.legend()
+plt.show()
+
+# Calculate and plot cumulative returns
+nvda['Cumulative_Return'] = (1 + nvda['Return']).cumprod()
+aapl['Cumulative_Return'] = (1 + aapl['Return']).cumprod()
+
+plt.figure(figsize=(12,6))
+plt.plot(nvda['Cumulative_Return'], label='NVDA')
+plt.plot(aapl['Cumulative_Return'], label='AAPL')
+plt.title('NVDA and AAPL Cumulative Returns')
+plt.xlabel('Date')
+plt.ylabel('Cumulative Return')
+plt.legend()
+plt.show()
